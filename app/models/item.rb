@@ -27,17 +27,18 @@ class Item < ActiveRecord::Base
   end
 
 
-  searchable do 
-    text :name, boost: 10
-    text :description, boost: 7
-    integer :address_id
-  end
+  #searchable do 
+  #  text :name, boost: 10
+  #  text :description, boost: 7
+  #  integer :address_id
+  #end
 
   def self.item_search(query, address=nil, range=10)
-    self.search do
-      fulltext query
-      with(:address_id, Address.near(address, range).map{|x| x.id})
-    end
+    #self.search do
+    #  fulltext query
+    #  with(:address_id, Address.near(address, range).map{|x| x.id})
+    #end
+    Item.where("name @@ :q OR description @@ :q", q: "%#{query}%").where(address_id: Address.near(address, range).map{|x| x.id}.to_a)
   end
 
   # Find items in a certain radius of a location

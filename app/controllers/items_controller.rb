@@ -69,7 +69,7 @@ class ItemsController < ApplicationController
     @query = params[:query]
     @range = params[:range] ? params[:range].to_f : RANGE_CONSTANT
     @range = @range * current_user.profile.distance_multiplier if current_user
-    @items = (params[:query] && !params[:query].blank?) ? Item.item_search(@query, @address, @range).results : Item.near(@address, @range)
+    @items = (params[:query] && !params[:query].blank?) ? Item.item_search(@query, @address, @range) : Item.near(@address, @range)
     # Filter from categories, this should go in model
     @items = @items.map{|item| item if (item.categorizations.pluck(:category_id).map{|x| x.to_s} - @categories).size < item.categorizations.pluck(:category_id).map{|x| x.to_s}.size}.compact
     @items = @items.sample(4) unless current_user
